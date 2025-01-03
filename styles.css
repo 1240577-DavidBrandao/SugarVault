@@ -1,0 +1,45 @@
+h1 {
+    font-size: 200%;
+    font-family: Poppins, sans-serif;
+}
+
+label, option, button, select {
+    font-size: 150%;
+    font-family: Poppins, sans-serif;
+}
+
+select {
+    background-color: white;
+}
+.heading{
+    display:flex;
+}
+img{
+    width: 75px;
+    height: 50px;
+    margin:0;
+}
+#profile-select {
+    font-size: 100%;
+    height: auto;
+    width: 150px;
+}
+
+#profile-select option {
+    background-color:black;
+    color:black;
+}
+
+.button-container {
+    display: flex;
+    margin-top:10px;
+    gap: 10px;
+}
+
+.button {
+    font-size: 100%;
+    font-family: Poppins, sans-serif;
+    border-radius: 5px;
+    cursor: pointer;
+    border: 1px solid black;
+}

@@ -1,20 +1,47 @@
+body{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    font-family: Poppins, sans-serif;
+
+}
 h1 {
     font-size: 200%;
     font-family: Poppins, sans-serif;
-}
+}   
 
-label, option, button, select {
+label, button {
     font-size: 150%;
     font-family: Poppins, sans-serif;
 }
+select{
+    display:flex;
+    font-size: 100%;
+    font-family: Poppins, sans-serif;
+    border-radius: 5px;
+    border-color: orangered;
+    cursor: pointer;
 
-select {
-    background-color: white;
 }
+.container{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    padding: 20px;
+    border:2px solid orangered;
+    border-radius: 20px;
+    width:500px;
+}
+
 .heading{
     display:flex;
 }
 img{
+    display: flex;
+    align-self: center;
     width: 75px;
     height: 50px;
     margin:0;
@@ -26,8 +53,7 @@ img{
 }
 
 #profile-select option {
-    background-color:black;
-    color:black;
+    
 }
 
 .button-container {

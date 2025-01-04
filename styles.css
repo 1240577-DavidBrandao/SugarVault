@@ -23,7 +23,6 @@ select{
     border-radius: 5px;
     border-color: orangered;
     cursor: pointer;
-
 }
 .container{
     display:flex;
@@ -52,9 +51,6 @@ img{
     width: 150px;
 }
 
-#profile-select option {
-    
-}
 
 .button-container {
     display: flex;
@@ -62,10 +58,34 @@ img{
     gap: 10px;
 }
 
+.button:disabled{
+    background-color: grey;
+    cursor: not-allowed;
+}
 .button {
     font-size: 100%;
     font-family: Poppins, sans-serif;
     border-radius: 5px;
     cursor: pointer;
-    border: 1px solid black;
+    padding: 10px;
+    border:0;
+    transition: transform 0.2s ease-in-out;
+}
+#load-button {
+    background-color: #017bfe;
+    
+}
+
+#new-button {
+    background-color: #9eee0a;
+}
+
+#delete-button {
+    background-color: #fe0001;
+}
+#cookies-button {
+    background-color: #ff8c00;
+}
+.button:hover {
+    transform: scale(1.1);
 }

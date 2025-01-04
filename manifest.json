@@ -2,7 +2,7 @@
     "manifest_version": 3,
     "name": "Multi-Profile Cookie Switcher",
     "version": "1.0",
-    "description": "Easily switch between multiple cookie profiles for a website.",
+    "description": "Easily switch between multiple cookie profiles.",
     "permissions": ["cookies", "tabs", "storage"],
     "host_permissions": ["<all_urls>"],
     "action": {

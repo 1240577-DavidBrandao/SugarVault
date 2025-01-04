@@ -1,91 +1,163 @@
-body{
+body {
     display: flex;
     justify-content: center;
     align-items: center;
     height: 100vh;
     margin: 0;
     font-family: Poppins, sans-serif;
-
+    border-radius: 20px;
 }
-h1 {
-    font-size: 200%;
-    font-family: Poppins, sans-serif;
-}   
 
-label, button {
+h1 {
     font-size: 150%;
     font-family: Poppins, sans-serif;
 }
-select{
-    display:flex;
+
+label,
+button {
+    font-size: 150%;
+    font-family: Poppins, sans-serif;
+}
+
+select {
+    display: flex;
     font-size: 100%;
     font-family: Poppins, sans-serif;
     border-radius: 5px;
-    border-color: orangered;
+    border-color: rgb(163, 163, 163);
     cursor: pointer;
 }
-.container{
-    display:flex;
-    flex-direction:column;
-    align-items:center;
-    justify-content:center;
+
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
     padding: 20px;
-    border:2px solid orangered;
     border-radius: 20px;
-    width:500px;
+    width: 300px;
+    height: auto;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
 }
 
-.heading{
-    display:flex;
+.heading {
+    display: flex;
 }
-img{
+
+img {
     display: flex;
     align-self: center;
     width: 75px;
     height: 50px;
-    margin:0;
+    margin: 0;
 }
+
 #profile-select {
     font-size: 100%;
-    height: auto;
-    width: 150px;
+    height: 200%;
+    width: 100%;
 }
 
 
 .button-container {
     display: flex;
-    margin-top:10px;
-    gap: 10px;
+    margin-top: 10px;
+    flex-wrap: wrap;
+    justify-content: space-between;
 }
 
-.button:disabled{
+.button:disabled {
     background-color: grey;
     cursor: not-allowed;
 }
+
 .button {
-    font-size: 100%;
-    font-family: Poppins, sans-serif;
+    padding: 10px;
+    border: none;
     border-radius: 5px;
     cursor: pointer;
-    padding: 10px;
-    border:0;
-    transition: transform 0.2s ease-in-out;
+    flex: 1 1 48%;
+    margin: 5px 0;
+    font-size: 1em;
+    transition: background 0.3s, transform 0.3s;
+    color: #fff;
 }
+
 #load-button {
-    background-color: #017bfe;
-    
+    background-color: #007ACC;
+
 }
 
 #new-button {
-    background-color: #9eee0a;
+    background-color: #00A300;
 }
 
 #delete-button {
-    background-color: #fe0001;
+    background-color: #D32F2F;
 }
+
 #cookies-button {
-    background-color: #ff8c00;
+    background-color: #FFA500;
 }
+
 .button:hover {
     transform: scale(1.1);
+}
+
+
+/* Modal starts here*/
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: 100%;
+    height: 100%;
+    border: 1px solid #ccc;
+    background-color: white;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    overflow: auto;
+}
+
+.modal-content {
+    padding: 20px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: smaller;
+}
+
+table,
+th,
+td {
+    border: 1px solid black;
+}
+
+th,
+td {
+    padding: 8px;
+    text-align: left;
+}
+td{
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 40px;
+    white-space: nowrap;
+}
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
 }

@@ -1,6 +1,7 @@
 console.log("popup.js is running");
 
-document.addEventListener("DOMContentLoaded",(startpoint) );
+document.addEventListener("DOMContentLoaded",startpoint);
+
 
 
 document.getElementById("load-button").addEventListener("click", () => {
@@ -13,7 +14,11 @@ document.getElementById("cookies-button").addEventListener("click", () => {
     chrome.runtime.sendMessage({ action: "getCookies" });
     var modal = document.getElementById("myModal");
     modal.style.display = "block";
-
+});
+document.getElementById("change-profile-button").addEventListener("click", () => {
+    console.log("Change Profile button clicked");
+    var modal2 = document.getElementById("myModal2");
+    modal2.style.display = "block";
 });
 document.getElementById("new-button").addEventListener("click", () => {
     console.log("New button clicked");
@@ -23,7 +28,6 @@ document.getElementById("new-button").addEventListener("click", () => {
         }
     });
 });
-
 document.getElementById("profile-select").addEventListener("change", () => {
     var profile = document.getElementById("profile-select").value;
     document.getElementById("load-button").disabled = false;
@@ -58,9 +62,15 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
         case "Profile created successfully.":
             loadProfiles();
             break;
+        case "Profile changed successfully.":
+            loadProfiles();
+            break;
         case "error":
             console.error(request.message);
             break;
+        default:
+            loadProfiles();
+           break 
     }
 });
 
@@ -126,8 +136,46 @@ function loadingTable(cookies) {
 
 function startpoint(){
     loadProfiles();
+    addEventListeners();
+}
+
+function addEventListeners(){
+    modal1();
+    modal2();
+}
+function modal1(){
     document.getElementById("close").addEventListener("click", () => {
         var modal = document.getElementById("myModal");
         modal.style.display = "none";
     });
+}
+function modal2(){
+    document.getElementById("close2").addEventListener("click", () => {
+        var modal = document.getElementById("myModal2");
+        modal.style.display = "none";
+    });
+    document.getElementById("cancel-button").addEventListener("click", () => {
+        var modal = document.getElementById("myModal2");
+        modal.style.display = "none";
+    });
+    document.getElementById("save-button").addEventListener("click", () => {
+        console.log("Save button clicked");
+        var profile = document.getElementById("profile-select").value;
+        var newProfileName = document.getElementById("profile-name").value;
+        console.log("Profile Name: ", newProfileName,"old:",profile);
+        chrome.runtime.sendMessage(
+            { action: "Change Profile Name", profileSelected: profile, profileName: newProfileName },
+            (response) => {
+                if (response.message === "Profile changed successfully.") {
+                    loadProfiles();
+                } else {
+                    console.error(response.message);
+                }
+            }
+        );
+        var modal2 = document.getElementById("myModal2");
+        modal2.style.display = "none";
+        loadProfiles();
+    });
+    document.getElementById("myModal2").addEventListener("change",loadProfiles);
 }

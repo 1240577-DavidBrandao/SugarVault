@@ -66,9 +66,11 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
         case "getCookies":
             getCookies();
             break;
-
+        case "Change Profile Name":
+            changeName(request.profileSelected, request.profileName, sendResponse);
+        break;
         default:
-            sendResponse({ message: "Ação não reconhecida." });
+            sendResponse({ message: "Error. Try again" });
             break;
     }
     return true;
@@ -191,6 +193,38 @@ function saveBaseProfile(callback) {
                 console.log("Backup dos cookies salvos no perfil `base`.");
                 if (callback) callback();
             });
+        });
+    });
+}
+
+
+function changeName(profileSelected, profileName, sendResponse) {
+    chrome.storage.local.get(["profiles", "cookies"], (data) => {
+        //profile and cookies data
+        const profiles = data.profiles || [];
+        const cookies = data.cookies || {};
+
+        //profile selected
+        const profileIndex = profiles.indexOf(profileSelected);
+        if (profileIndex === -1 || profileIndex===0 || profileIndex===1) {
+            sendResponse({ message: "Unable to update profile" });
+            return;
+        }
+
+        //checking if profile name exists
+        if (!profileName || profileName.trim() === "" || profiles.includes(profileName)) {
+            sendResponse({ message: "Invalid name. Try again" });
+            return;
+        }
+        profiles[profileIndex] = profileName;
+
+        //cookies
+        const profileCookies = cookies[profileSelected] || [];
+        cookies[profileName] = profileCookies;
+        delete cookies[profileSelected];
+        chrome.storage.local.set({ profiles, cookies, activeProfile: profileName }, () => {
+            console.log(`Perfil renomeado para: ${profileName}`);
+            sendResponse({ message: "Profile changed successfully." });
         });
     });
 }

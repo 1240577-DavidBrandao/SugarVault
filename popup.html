@@ -16,7 +16,7 @@
 <body>
     <div class="container">
         <div class="heading">
-            <img src="media/logo.png" alt="icon" class="icon">
+            <img src="media/logoblack.png" alt="icon" class="icon">
             <h1>Modular Cookies</h1>
 
         </div>
@@ -30,6 +30,7 @@
             <button id="new-button" class="button">New Profile</button>
             <button id="delete-button" class="button" disabled>Delete Profile</button>
             <button id="cookies-button" class="button">Get Cookies</button>
+            <button id="change-profile-button" class="button">Change Profile name</button>
         </div>
     </div>
     <script src="popup.js"></script>
@@ -59,3 +60,16 @@
             </tbody>
         </table>
     </div>
+</div>
+
+<div id="myModal2" class="modal2">
+    <div class="modal-content"> <span id="close2" class="close">&times;</span>
+        <h2 id="modal-title2">Change profile name</h2>
+        <label for="profile-name">Enter new profile name:</label>
+        <br>
+        <input type="text" id="profile-name" placeholder="Enter Profile Name">
+        <br>
+        <button id="save-button" class="button">Save</button>
+        <button id="cancel-button" class="button">Cancel</button>
+    </div>
+</div>

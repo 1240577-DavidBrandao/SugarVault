@@ -1,17 +1,28 @@
-console.log("background.js is running");
 
 chrome.runtime.onInstalled.addListener(() => {
-    saveBaseProfile(() => {
-        console.log("Perfil base inicializado com todos os cookies.");
+    saveBaseProfile();
+    chrome.storage.local.get("profiles", (data) => {
+        if (!data.profiles) {
+            chrome.storage.local.set({
+                profiles: ["default", "base"],
+                activeProfile: "default",
+            });
+        }
     });
+});
+chrome.storage.local.get(["profiles", "cookies"], (data) => {
+    let profiles = data.profiles || [];
+    let cookies = data.cookies || {};
+    if (cookies["default"] && cookies["default"].length === 0) {
+        profiles = profiles.filter(profile => profile !== "default");
+    }
 });
 chrome.storage.local.get("profiles", (data) => {
     if (!data.profiles) {
-        chrome.storage.local.set({ profiles: [] }, () => {
-            console.log("Initial profiles set.");
-        });
+        chrome.storage.local.set({ profiles: [] });
     }
 });
+
 
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     switch (request.action) {
@@ -20,11 +31,15 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
                 const profiles = data.profiles || [];
                 const newProfileName = `profile${profiles.length - 1}`;
                 profiles.push(newProfileName);
-                saveCookiestoProfile("default", () => {
-                    clearAllCookies(() => {
-                        chrome.storage.local.set({ profiles, activeProfile: newProfileName }, () => {
-                            console.log(`Novo perfil criado e ativo: ${newProfileName}`);
-                            sendResponse({ message: "Profile created successfully." });
+                chrome.storage.local.get(["activeProfile"], (activeData) => {
+                    const activeProfile = activeData.activeProfile || "default";
+                    saveCookiestoProfile(activeProfile, () => {
+                        saveBaseProfile(() => {
+                            clearAllCookies(() => {
+                                chrome.storage.local.set({ profiles, activeProfile: newProfileName }, () => {
+                                    sendResponse({ message: "Profile created successfully." });
+                                });
+                            });
                         });
                     });
                 });
@@ -33,13 +48,16 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 
 
         case "loadProfile":
-            chrome.storage.local.get(["profiles", "activeProfile"], (data) => {
+            chrome.storage.local.get(["activeProfile"], (data) => {
                 const activeProfile = data.activeProfile || "default";
                 saveCookiestoProfile(activeProfile, () => {
-                    loadCookiesFromProfile(request.profileName, (message) => {
-                        chrome.storage.local.set({ activeProfile: request.profileName }, () => {
-                            console.log(`Perfil ativo agora é: ${request.profileName}`);
-                            sendResponse({ message });
+                    saveBaseProfile(() => {
+                        clearAllCookies(() => {
+                            loadCookiesFromProfile(request.profileName, (message) => {
+                                chrome.storage.local.set({ activeProfile: request.profileName }, () => {
+                                    sendResponse({ message });
+                                });
+                            });
                         });
                     });
                 });
@@ -47,7 +65,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
             break;
         case "deleteProfile":
             if (["default", "base"].includes(request.profileName)) {
-                sendResponse({ message: "Não é possível excluir este perfil." });
+                sendResponse({ message: "Impossible to delete profile." });
             } else {
                 chrome.storage.local.get("profiles", (data) => {
                     var profiles = data.profiles || [];
@@ -55,7 +73,6 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
                     if (index > -1) {
                         profiles.splice(index, 1);
                         chrome.storage.local.set({ profiles: profiles }, () => {
-                            console.log("Perfil excluído:", request.profileName);
                             sendResponse({ message: "Profile deleted successfully." });
                         });
                     }
@@ -67,8 +84,12 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
             getCookies();
             break;
         case "Change Profile Name":
-            changeName(request.profileSelected, request.profileName, sendResponse);
-        break;
+            if (["default", "base"].includes(request.profileSelected)) {
+                sendResponse({ message: "Impossible to rename profile." });
+            } else {
+                changeName(request.profileSelected, request.profileName, sendResponse);
+            }
+            break;
         default:
             sendResponse({ message: "Error. Try again" });
             break;
@@ -77,15 +98,13 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 });
 
 function getCookies() {
-    chrome.cookies.getAll({}, (cookies) => { 
-        if (cookies) { 
-            console.log("Cookies obtained successfully:", cookies); 
-            chrome.runtime.sendMessage({ action: "sendCookies", data: cookies }); 
-        } 
-        else { 
-            console.error("Error obtaining cookies. Check permissions."); 
-
-        } 
+    chrome.cookies.getAll({}, (cookies) => {
+        if (cookies) {
+            chrome.runtime.sendMessage({ action: "sendCookies", data: cookies });
+        }
+        else {
+            console.error("Error obtaining cookies. Check permissions.");
+        }
     });
 }
 
@@ -93,7 +112,7 @@ function getCookies() {
 function clearAllCookies(callback) {
     chrome.cookies.getAll({}, (cookies) => {
         let pending = cookies.length;
-        if (!pending) return callback(); // Nenhum cookie para limpar
+        if (!pending) return callback();
         cookies.forEach((cookie) => {
             chrome.cookies.remove({
                 url: `http${cookie.secure ? "s" : ""}://${cookie.domain}${cookie.path}`,
@@ -105,24 +124,32 @@ function clearAllCookies(callback) {
     });
 }
 
+
 function saveCookiestoProfile(profileName, callback) {
-    if (profileName === "" || profileName === null) {
+    if (!profileName || profileName === null) {
         profileName = "default";
     }
     chrome.cookies.getAll({}, (cookies) => {
         if (cookies && cookies.length > 0) {
-            console.log("Cookies obtidos para salvar:", cookies);
             chrome.storage.local.get("cookies", (data) => {
-                var allCookies = data.cookies || {};
+                let allCookies = data.cookies || {};
                 allCookies[profileName] = cookies;
                 chrome.storage.local.set({ cookies: allCookies }, () => {
-                    console.log(`Cookies salvos no perfil: ${profileName}`);
                     if (callback) callback();
                 });
             });
         } else {
-            console.error("Nenhum cookie encontrado para salvar.");
-            if (callback) callback("Erro: Nenhum cookie encontrado para salvar.");
+            console.error("Error: No cookies found.");
+            if (profileName !== "default") {
+                chrome.storage.local.get("cookies", (data) => {
+                    let allCookies = data.cookies || {};
+                    allCookies["default"] = cookies;
+                    chrome.storage.local.set({ cookies: allCookies }, () => {
+                        console.warn("Cookies saved on the default profile.");
+                        if (callback) callback("Erro: Salvo no perfil padrão.");
+                    });
+                });
+            }
         }
     });
 }
@@ -133,10 +160,11 @@ function loadCookiesFromProfile(profileName, callback) {
         const profileCookies = allCookies[profileName] || [];
 
         if (profileCookies.length === 0) {
-            console.warn(`Nenhum cookie encontrado para o perfil: ${profileName}`);
-            if (callback) callback(`Nenhum cookie encontrado para o perfil: ${profileName}`);
+            console.warn(`No cookies found for this profile: ${profileName}`);
+            if (callback) callback(`No cookies found for this profile: ${profileName}`);
             return;
         }
+
         clearAllCookies(() => {
             setProfileCookies(profileCookies, callback);
         });
@@ -144,12 +172,12 @@ function loadCookiesFromProfile(profileName, callback) {
 }
 
 
+
 function setProfileCookies(profileCookies, callback) {
     let pending = profileCookies.length;
 
     if (pending === 0) {
-        console.log("Nenhum cookie para carregar.");
-        if (callback) callback("Nenhum cookie para carregar.");
+        if (callback) callback("No cookies found.");
         return;
     }
 
@@ -167,17 +195,16 @@ function setProfileCookies(profileCookies, callback) {
                 expirationDate: cookie.expirationDate,
             }, (result) => {
                 if (chrome.runtime.lastError) {
-                    console.error("Erro ao definir cookie:", chrome.runtime.lastError, cookie);
+                    console.error("Error defining cookie:", chrome.runtime.lastError, cookie);
                 }
                 if (--pending === 0) {
-                    console.log("Todos os cookies foram carregados com sucesso.");
-                    if (callback) callback("Cookies carregados com sucesso.");
+                    if (callback) callback("All cookies set.");
                 }
             });
         } catch (error) {
-            console.error("Erro ao processar cookie:", cookie, error);
+            console.error("Error processing cookie", cookie, error);
             if (--pending === 0) {
-                if (callback) callback("Erro ao processar alguns cookies.");
+                if (callback) callback("Error processing cookies.");
             }
         }
     });
@@ -188,42 +215,41 @@ function saveBaseProfile(callback) {
     chrome.cookies.getAll({}, (cookies) => {
         chrome.storage.local.get("cookies", (data) => {
             var allCookies = data.cookies || {};
-            allCookies["base"] = cookies;
+            const baseCookies = allCookies["base"] || [];
+            const uniqueCookies = [...baseCookies];
+            cookies.forEach((cookie) => {
+                if (!uniqueCookies.some((c) => c.name === cookie.name && c.domain === cookie.domain)) {
+                    uniqueCookies.push(cookie);
+                }
+            });
+
+            allCookies["base"] = uniqueCookies;
             chrome.storage.local.set({ cookies: allCookies }, () => {
-                console.log("Backup dos cookies salvos no perfil `base`.");
                 if (callback) callback();
             });
         });
     });
 }
 
-
 function changeName(profileSelected, profileName, sendResponse) {
     chrome.storage.local.get(["profiles", "cookies"], (data) => {
-        //profile and cookies data
         const profiles = data.profiles || [];
         const cookies = data.cookies || {};
 
-        //profile selected
         const profileIndex = profiles.indexOf(profileSelected);
-        if (profileIndex === -1 || profileIndex===0 || profileIndex===1) {
+        if (profileIndex === -1 || profileIndex === 0 || profileIndex === 1) {
             sendResponse({ message: "Unable to update profile" });
             return;
         }
-
-        //checking if profile name exists
         if (!profileName || profileName.trim() === "" || profiles.includes(profileName)) {
             sendResponse({ message: "Invalid name. Try again" });
             return;
         }
         profiles[profileIndex] = profileName;
-
-        //cookies
         const profileCookies = cookies[profileSelected] || [];
         cookies[profileName] = profileCookies;
         delete cookies[profileSelected];
         chrome.storage.local.set({ profiles, cookies, activeProfile: profileName }, () => {
-            console.log(`Perfil renomeado para: ${profileName}`);
             sendResponse({ message: "Profile changed successfully." });
         });
     });

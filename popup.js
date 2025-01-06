@@ -32,6 +32,7 @@ document.getElementById("profile-select").addEventListener("change", () => {
     var profile = document.getElementById("profile-select").value;
     document.getElementById("load-button").disabled = false;
     document.getElementById("delete-button").disabled = ["default", "base"].includes(profile);
+    document.getElementById("change-profile-button").disabled = ["default", "base"].includes(profile);
 });
 
 document.getElementById("delete-button").addEventListener("click", () => {
@@ -98,10 +99,26 @@ function loadProfiles() {
 
 function loadingTable(cookies) {
     console.log("got Cookies", cookies);
+    var table = document.getElementById("cookies-table");
     var modaltitle= document.getElementById("modal-title");
     modaltitle.innerHTML = `${cookies.length} - Cookies Available`;
+    table.innerHTML = `
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Value</th>
+                <th>Domain</th>
+                <th>Path</th>
+                <th>Expiration Date</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    `;
+    if(cookies.length==0){
+        return;
+    }
     if (cookies && cookies.length > 0) {
-        var table = document.getElementById("cookies-table");
+        
         table.innerHTML = `
                 <thead>
                     <tr>

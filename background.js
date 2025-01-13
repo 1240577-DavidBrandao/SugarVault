@@ -5,7 +5,7 @@ chrome.runtime.onInstalled.addListener(() => {
         if (!data.profiles) {
             chrome.storage.local.set({
                 profiles: ["default", "base"],
-                activeProfile: "default",
+                activeProfile: "base",
             });
         }
     });

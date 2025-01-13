@@ -16,23 +16,22 @@
 <body>
     <div class="container">
         <div class="heading">
-            <img src="media/logoblack.png" alt="icon" class="icon">
-            <h1>Modular Cookies</h1>
-
+            <img src="media/vault-logo.png" alt="Vault Logo" />
+            <h1>Sugar Vault</h1>
         </div>
         <p>Cookies Profile Switcher</p>
         <label for="profile-select">Select Profile:</label>
         <select name="profile-select" id="profile-select">
-            <option value="" class="option" disabled selected>Select a profile</option>
+            <option value="" disabled selected>Select a profile</option>
         </select>
         <div class="button-container">
             <button id="load-button" class="button" disabled>Load Profile</button>
             <button id="new-button" class="button">New Profile</button>
             <button id="delete-button" class="button" disabled>Delete Profile</button>
             <button id="cookies-button" class="button">Get Cookies</button>
-            <button id="change-profile-button" class="button">Change Profile name</button>
+            <button id="change-profile-button" class="button">Change Profile Name</button>
         </div>
-    </div>
+    </div>    
     <script src="popup.js"></script>
 </body>
 </html>
@@ -65,11 +64,16 @@
 <div id="myModal2" class="modal2">
     <div class="modal-content"> <span id="close2" class="close">&times;</span>
         <h2 id="modal-title2">Change profile name</h2>
+        <p id="current"></p>
         <label for="profile-name">Enter new profile name:</label>
         <br>
+
+
         <input type="text" id="profile-name" placeholder="Enter Profile Name">
         <br>
-        <button id="save-button" class="button">Save</button>
-        <button id="cancel-button" class="button">Cancel</button>
+        <div class="button-container">
+            <button id="save-button" class="button">Save</button>
+            <button id="cancel-button" class="button">Cancel</button>
+        </div>
     </div>
 </div>

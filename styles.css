@@ -4,29 +4,9 @@ body {
     align-items: center;
     height: 100vh;
     margin: 0;
-    font-family: Poppins, sans-serif;
-}
-
-h1 {
-    font-size: 150%;
-    font-family: Poppins, sans-serif;
-}
-
-label,
-button {
-    font-size: 140%;
-    font-family: Poppins, sans-serif;
-}
-
-select {
-    display: flex;
-    font-size: 100%;
-    font-family: Poppins, sans-serif;
-    border-radius: 5px;
-    border-color: rgb(163, 163, 163);
-    cursor: pointer;
-    font-size: 100%;
-    width: 70%;
+    font-family: "Fira Code", sans-serif;
+    color: #e8eaed;
+    background: radial-gradient(circle, #1e1e1e, #121212);
 }
 
 .container {
@@ -35,164 +15,205 @@ select {
     align-items: center;
     justify-content: center;
     padding: 20px;
-    width: 300px;
-    height: auto;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+    width: 320px;
+    border: 4px solid rgba(255, 255, 255, 0.1);
+    background: linear-gradient(145deg, #2a2a2a, #1c1c1c);
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.6), inset 0 -4px 8px rgba(0, 0, 0, 0.4);
 }
-.container p{
-    font-size: 120%;
-    font-family: Poppins, sans-serif;
-    margin: 0;
+.heading{
+    display:flex;
+    flex: row;
 }
-.heading {
-    display: flex;
+h1 {
+    font-size: 1.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: #00bcd4;
+    text-shadow: 0 2px 4px rgba(0, 188, 212, 0.4);
 }
 
-img {
-    display: flex;
-    align-self: center;
-    width: 75px;
-    height: 50px;
-    margin: 0;
+label {
+    font-size: 1.2rem;
+    color: #ffffff;
+    margin-bottom: 10px;
 }
+
+select ,#profile-name{
+    font-size: 1rem;
+    border: none;
+    padding: 8px;
+    border-radius: 5px;
+    background: #2c2c2c;
+    color: #ffffff;
+    outline: none;
+    width: 70%;
+}
+
+
 .button-container {
     display: flex;
-    margin-top: 10px;
     flex-wrap: wrap;
-    justify-content: space-between;
-}
-
-.button:disabled {
-    background-color: grey;
-    cursor: not-allowed;
+    gap: 10px;
+    margin-top: 20px;
 }
 
 .button {
-    padding: 10px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
     flex: 1 1 48%;
-    margin: 5px 0;
-    font-size: 1em;
-    transition: background 0.3s, transform 0.3s;
-    color: #fff;
+    padding: 12px;
+    border-radius: 5px;
+    border: 2px solid #2e2e2e;
+    background: linear-gradient(145deg, #3a3a3a, #2a2a2a);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.5), inset 0 2px 4px rgba(0, 0, 0, 0.3);
+    color: #e8eaed;
+    text-transform: uppercase;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: all 0.3s ease;
+}
+
+.button:hover {
+    transform: scale(1.05);
+    background: linear-gradient(145deg, #4a4a4a, #3a3a3a);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.7), inset 0 4px 8px rgba(0, 0, 0, 0.5);
 }
 
 #load-button {
-    background-color: #007ACC;
-
+    background-color: #007acc;
 }
 
 #new-button {
-    background-color: #00A300;
+    background-color: #00a300;
 }
 
 #delete-button {
-    background-color: #D32F2F;
+    background-color: #d32f2f;
 }
 
 #cookies-button {
-    background-color: #FFA500;
+    background-color: #ffa500;
 }
 
 #change-profile-button {
-    background-color: #9966CC;
-}
-.button:hover {
-    transform: scale(1.1);
+    background-color: #9966cc;
 }
 
+/* Additional Effects */
+img {
+    display:flex;
+    align-self: center;
+    height: 50px;
+    width: auto;
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.5));
+    margin-right:15px;
+}
 
-/* Modal starts here*/
-.modal {
-    display: none;
+p {
+    color: #9e9e9e;
+    font-size: 1rem;
+    margin: 10px 0;
+    text-align: center;
+}
+
+/* General Modal Styling */
+.modal, .modal2 {
+    display: none; 
     position: fixed;
     z-index: 1000;
     left: 50%;
     top: 50%;
     transform: translate(-50%, -50%);
-    width: 100%;
-    height: 100%;
-    border: 1px solid #ccc;
-    background-color: white;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    width: 80%;
+    height: 90%;
+    background: linear-gradient(145deg, #2c2c2c, #3b3b3b);
+    color: #e8eaed;
+    border: 2px solid #555555;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5), 
+                inset 0 5px 10px rgba(255, 255, 255, 0.1);
     overflow: auto;
+}
+.modal{
+    width:100%;
+    height:100%;
 }
 
 .modal-content {
     padding: 20px;
+    color: #e8eaed;
+    font-family: 'Poppins', sans-serif;
+    text-align: center;
+    border-radius: 10px;
+    background: linear-gradient(145deg, #333333, #222222);
+    box-shadow: inset 0 5px 10px rgba(0, 0, 0, 0.5);
 }
 
-table {
-    width: 100%;
-    border-collapse: collapse;
-    font-size: smaller;
-}
-
-table,
-th,
-td {
-    border: 1px solid black;
-}
-
-th,
-td {
-    padding: 8px;
-    text-align: left;
-}
-td{
-    overflow: hidden;
-    text-overflow: ellipsis;
-    max-width: 40px;
-    white-space: nowrap;
-}
 .close {
     color: #aaa;
     float: right;
     font-size: 28px;
     font-weight: bold;
-}
-
-.close:hover,
-.close:focus {
-    color: black;
-    text-decoration: none;
     cursor: pointer;
+    transition: color 0.3s ease;
 }
 
-/*Modal 2 starts here*/
-
-.modal2 {
-    display: none;
-    position: fixed;
-    z-index: 1000;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
-    width: 70%;
-    height: 80%;
-    border: 1px solid #ccc;
-    background-color: white;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    overflow: none;
+.close:hover, .close:focus {
+    color: #e8eaed;
+    text-decoration: none;
 }
 
-
-#save-button {
-    background-color: #00A300;
-}#cancel-button {
-    background-color: #D32F2F;
+/* Tables inside Modals */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: smaller;
+    background: linear-gradient(145deg, #1e1e1e, #2a2a2a);
+    color: #e8eaed;
+    box-shadow: inset 0 1px 3px rgba(255, 255, 255, 0.1);
+    border: 1px solid #444444;
 }
 
-
-#profile-name{
-    font-size: 120%;
-    font-family: Poppins, sans-serif;
-    margin-bottom: 10px;
+th, td {
+    padding: 10px;
+    text-align: left;
+    border: 1px solid #555555;
 }
-.modal-content label{
-    font-size: 120%;
-    font-family: Poppins, sans-serif;
-    
+
+td {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 40px;
+    white-space: nowrap;
+}
+
+/* Buttons Inside Modals */
+.modal-content button {
+    padding: 10px 20px;
+    margin: 10px;
+    font-size: 1rem;
+    font-family: 'Poppins', sans-serif;
+    color: #e8eaed;
+    background: linear-gradient(145deg, #4a4a4a, #2a2a2a);
+    border: 1px solid #666666;
+    border-radius: 5px;
+    cursor: pointer;
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.5);
+    transition: transform 0.3s ease, background 0.3s ease;
+}
+
+.modal-content button:hover {
+    transform: scale(1.05);
+    background: linear-gradient(145deg, #5b5b5b, #3b3b3b);
+}
+
+/* Scroll Bar Styling for Modal */
+.modal-content::-webkit-scrollbar {
+    width: 10px;
+}
+
+.modal-content::-webkit-scrollbar-thumb {
+    background: #555555;
+    border-radius: 5px;
+}
+
+.modal-content::-webkit-scrollbar-thumb:hover {
+    background: #777777;
 }

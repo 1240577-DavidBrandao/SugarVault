@@ -1,27 +1,25 @@
-console.log("popup.js is running");
 
 document.addEventListener("DOMContentLoaded",startpoint);
 
-
-
 document.getElementById("load-button").addEventListener("click", () => {
-    console.log("Load button clicked");
     var profile = document.getElementById("profile-select").value;
     chrome.runtime.sendMessage({ action: "loadProfile", profileName: profile });
 });
 document.getElementById("cookies-button").addEventListener("click", () => {
-    console.log("Cookies button clicked");
     chrome.runtime.sendMessage({ action: "getCookies" });
     var modal = document.getElementById("myModal");
     modal.style.display = "block";
 });
 document.getElementById("change-profile-button").addEventListener("click", () => {
-    console.log("Change Profile button clicked");
     var modal2 = document.getElementById("myModal2");
     modal2.style.display = "block";
+    var current=document.getElementById("current");
+    current.innerHTML='';
+    var selectedprofile=document.getElementById("profile-select").value;
+    current.append("Current: ",selectedprofile);
+
 });
 document.getElementById("new-button").addEventListener("click", () => {
-    console.log("New button clicked");
     chrome.runtime.sendMessage({ action: "newProfile" }, (response) => {
         if (response.message === "Profile created successfully.") {
             loadProfiles();
@@ -36,7 +34,6 @@ document.getElementById("profile-select").addEventListener("change", () => {
 });
 
 document.getElementById("delete-button").addEventListener("click", () => {
-    console.log("Delete button clicked");
     var profile = document.getElementById("profile-select").value;
     chrome.runtime.sendMessage({ action: "deleteProfile", profileName: profile }, (response) => {
         if (response.message === "Profile deleted successfully.") {
@@ -83,11 +80,14 @@ function loadProfiles() {
 
         select.innerHTML = '<option value="" disabled selected>Selecionar perfil</option>';
         profiles.forEach((profile) => {
+            
             const option = document.createElement("option");
             option.text = profile;
             option.value = profile;
             if (profile === activeProfile) option.selected = true;
-            select.add(option);
+            if(profile!="default"){
+                select.add(option);
+            }
         });
 
         document.getElementById("load-button").disabled = select.value === "";
@@ -98,7 +98,6 @@ function loadProfiles() {
 
 
 function loadingTable(cookies) {
-    console.log("got Cookies", cookies);
     var table = document.getElementById("cookies-table");
     var modaltitle= document.getElementById("modal-title");
     modaltitle.innerHTML = `${cookies.length} - Cookies Available`;
@@ -176,10 +175,8 @@ function modal2(){
         modal.style.display = "none";
     });
     document.getElementById("save-button").addEventListener("click", () => {
-        console.log("Save button clicked");
         var profile = document.getElementById("profile-select").value;
         var newProfileName = document.getElementById("profile-name").value;
-        console.log("Profile Name: ", newProfileName,"old:",profile);
         chrome.runtime.sendMessage(
             { action: "Change Profile Name", profileSelected: profile, profileName: newProfileName },
             (response) => {

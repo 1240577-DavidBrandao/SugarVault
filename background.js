@@ -29,7 +29,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
         case "newProfile":
             chrome.storage.local.get(["profiles"], (data) => {
                 const profiles = data.profiles || [];
-                const newProfileName = `profile${profiles.length - 1}`;
+                const newProfileName = `profile${profiles.length}`;
                 profiles.push(newProfileName);
                 chrome.storage.local.get(["activeProfile"], (activeData) => {
                     const activeProfile = activeData.activeProfile || "default";
@@ -67,6 +67,14 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
             if (["default", "base"].includes(request.profileName)) {
                 sendResponse({ message: "Impossible to delete profile." });
             } else {
+                chrome.storage.local.get("cookies", (data) => {
+                    let allCookies = data.cookies || {};
+                    delete allCookies[request.profileName];
+                    chrome.storage.local.set({ cookies: allCookies }, () => {
+                        sendResponse({ message: "Profile deleted successfully." });
+                    });
+                });
+
                 chrome.storage.local.get("profiles", (data) => {
                     var profiles = data.profiles || [];
                     var index = profiles.indexOf(request.profileName);
@@ -90,12 +98,64 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
                 changeName(request.profileSelected, request.profileName, sendResponse);
             }
             break;
+        case "clearCookies":
+            clearCookiesfromProfile(request.profileName, () => {
+                sendResponse({ message: "Cookies cleared." });
+            });
+            break;
+
+        case "clearEverything":
+            clearEverything(() => {
+                sendResponse({ message: "All cookies and profiles cleared." });
+            })
+            break;
         default:
             sendResponse({ message: "Error. Try again" });
             break;
     }
     return true;
 });
+
+function clearCookiesfromProfile(profileName, callback) {
+    chrome.storage.local.get("cookies", (data) => {
+        const allCookies = data.cookies || {};
+        const profileCookies = allCookies[profileName] || [];
+        let pending = profileCookies.length;
+        if (pending === 0) {
+            console.log(`No cookies to clear for profile: ${profileName}`);
+            return callback();
+        }
+        profileCookies.forEach((cookie) => {
+            chrome.cookies.remove({
+                url: `http${cookie.secure ? "s" : ""}://${cookie.domain}${cookie.path}`,
+                name: cookie.name,
+            });
+        });
+    });
+}
+
+function clearEverything(callback) {
+    chrome.storage.local.get(["profiles", "cookies"], (data) => {
+        let allCookies = data.cookies || {};
+        let profiles = data.profiles || [];
+        profiles = profiles.filter((profile) => profile === "base" || profile === "default");
+        const cookieProfiles = Object.keys(allCookies).filter(
+            (profileName) => profileName !== "base" && profileName !== "default"
+        );
+        cookieProfiles.forEach((profileName) => delete allCookies[profileName]);
+        chrome.storage.local.set(
+            { profiles, cookies: allCookies, activeProfile: "base" },
+            () => {
+                clearAllCookies(() => {
+                    console.log("Extension reset to initial state.");
+                    sendResponse({ message: "Extension reset to initial state." });
+                });
+            }
+        );
+    });
+    loadProfiles();
+}
+
 
 function getCookies() {
     chrome.cookies.getAll({}, (cookies) => {
@@ -126,9 +186,7 @@ function clearAllCookies(callback) {
 
 
 function saveCookiestoProfile(profileName, callback) {
-    if (!profileName || profileName === null) {
-        profileName = "default";
-    }
+
     chrome.cookies.getAll({}, (cookies) => {
         if (cookies && cookies.length > 0) {
             chrome.storage.local.get("cookies", (data) => {
@@ -140,16 +198,16 @@ function saveCookiestoProfile(profileName, callback) {
             });
         } else {
             console.error("Error: No cookies found.");
-            if (profileName !== "default") {
-                chrome.storage.local.get("cookies", (data) => {
-                    let allCookies = data.cookies || {};
-                    allCookies["default"] = cookies;
-                    chrome.storage.local.set({ cookies: allCookies }, () => {
-                        console.warn("Cookies saved on the default profile.");
-                        if (callback) callback("Erro: Salvo no perfil padrão.");
-                    });
+
+            chrome.storage.local.get("cookies", (data) => {
+                let allCookies = data.cookies || {};
+                allCookies["default"] = cookies;
+                chrome.storage.local.set({ cookies: allCookies }, () => {
+                    console.warn("Cookies saved on the default profile.");
+                    if (callback) callback("Erro: Salvo no perfil padrão.");
                 });
-            }
+            });
+
         }
     });
 }
@@ -158,13 +216,6 @@ function loadCookiesFromProfile(profileName, callback) {
     chrome.storage.local.get("cookies", (data) => {
         const allCookies = data.cookies || {};
         const profileCookies = allCookies[profileName] || [];
-
-        if (profileCookies.length === 0) {
-            console.warn(`No cookies found for this profile: ${profileName}`);
-            if (callback) callback(`No cookies found for this profile: ${profileName}`);
-            return;
-        }
-
         clearAllCookies(() => {
             setProfileCookies(profileCookies, callback);
         });

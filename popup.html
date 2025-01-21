@@ -28,9 +28,13 @@
             <button id="load-button" class="button" disabled>Load Profile</button>
             <button id="new-button" class="button">New Profile</button>
             <button id="delete-button" class="button" disabled>Delete Profile</button>
-            <button id="cookies-button" class="button">Get Cookies</button>
+            <button id="cookies-button" class="button">Session Overview</button>
+            <button id="clear-button" class="button">Clear Everything</button>
+            <button id="reset-button" class="button">Reset Profile</button>
             <button id="change-profile-button" class="button">Change Profile Name</button>
+
         </div>
+
     </div>    
     <script src="popup.js"></script>
 </body>
@@ -72,6 +76,28 @@
         <div class="button-container">
             <button id="save-button" class="button">Save</button>
             <button id="cancel-button" class="button">Cancel</button>
+        </div>
+    </div>
+</div>
+
+<div id="modalMessage1" class="modalmessage">
+    <div class="modal-content"> <span id="close3" class="close">&times;</span>
+        <h2>Clear everything?</h2>
+        <p>This action will clear all cookies and profiles available, do you wish to continue?</p>
+        <div class="button-container">
+            <button id="yes-button" class="button">Yes</button>
+            <button id="no-button" class="button">No</button>
+        </div>
+    </div>
+</div>
+
+<div id="modalMessage2" class="modalmessage">
+    <div class="modal-content"> <span id="close4" class="close">&times;</span>
+        <h2>Clear everything?</h2>
+        <p>This action will clear all cookies available in this profile, do you wish to continue?</p>
+        <div class="button-container">
+            <button id="yes-button2" class="button">Yes</button>
+            <button id="no-button2" class="button">No</button>
         </div>
     </div>
 </div>

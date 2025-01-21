@@ -70,7 +70,7 @@ select ,#profile-name{
     color: #e8eaed;
     text-transform: uppercase;
     cursor: pointer;
-    font-size: 0.9rem;
+    font-size: 0.7rem;
     transition: all 0.3s ease;
 }
 
@@ -118,7 +118,7 @@ p {
 }
 
 /* General Modal Styling */
-.modal, .modal2 {
+.modal {
     display: none; 
     position: fixed;
     z-index: 1000;
@@ -224,7 +224,7 @@ td {
 
 
 
-/*Scroll Bar - sandbox*/
+/*Scroll Bar - sandbox - cookie scrollbar - not good*/
 ::-webkit-scrollbar {
     width: 16px;
     height: 16px; 
@@ -238,3 +238,34 @@ td {
 
 
 
+.modal2{
+    display: none; 
+    position: fixed;
+    z-index: 1000;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: 80%;
+    height: 75%;
+    background: linear-gradient(145deg, #2c2c2c, #3b3b3b);
+    color: #e8eaed;
+    border: 2px solid #555555;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5), 
+                inset 0 5px 10px rgba(255, 255, 255, 0.1);
+    overflow: none;
+}
+
+.modalmessage{ 
+    display:none;
+    position: fixed;
+    z-index: 1000;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: 70%;
+    height: 70%;
+    background: linear-gradient(145deg, #2c2c2c, #3b3b3b);
+    color: #e8eaed;
+    border: 2px solid #555555;
+    overflow: none;
+}

@@ -1,4 +1,4 @@
-<<p align="center">
+<p align="center">
   <img src="media/logo-vault_wide.png" alt="Sugar Vault logo" width="500"/>
 </p>
 
@@ -89,8 +89,9 @@ SUGARVAULT/
     Profile auto-switching rules
 
 ## 📢 Disclaimer
-    This extension is provided "as is" and is intended for local development, testing, and research purposes only. Any misuse, data leakage, or unauthorized access resulting from its use is the sole responsibility of the user. The developer assumes no responsibility for any damages, security breaches, or data loss...
-        ⚠️ Use this tool responsibly. The developer is not responsible for any data leaks, session hijacking, or misuse of stored cookies.
+This extension is provided "as is" and is intended for local development, testing, and research purposes only. Any misuse, data leakage, or unauthorized access resulting from its use is the sole responsibility of the user. The developer assumes no responsibility for any damages, security breaches, or data loss...
+    
+    ⚠️ Use this tool responsibly. The developer is not responsible for any data leaks, session hijacking, or misuse of stored cookies.
 
 ## 🐞 Known Issues - Please report any issues via [GitHub Issues page](https://github.com/1240577-DavidBrandao/SugarVault/issues).
 

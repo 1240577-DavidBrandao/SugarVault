@@ -1,5 +1,3 @@
-# Sugar Vault
-
 <p align="center">
   <img src="media/logo-vault_wide.png" alt="Sugar Vault logo" width="500"/>
 </p>
